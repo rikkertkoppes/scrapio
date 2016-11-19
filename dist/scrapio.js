@@ -61,6 +61,11 @@ var scrapio =
 		this.dom = $;
 	}
 
+	Resolver.prototype.run = function(templateFactory) {
+		var self = this;
+		return this.tmpl(templateFactory());
+	}
+
 	Resolver.prototype.tmpl = function(template) {
 		var self = this;
 		if (template instanceof Array) {
@@ -93,28 +98,42 @@ var scrapio =
 		return this.selector? $.find(this.selector): $;
 	}
 
-	Selector.prototype.text = function() {
-		this.resolver = function($) {
-			return this.context($).text().trim();
-		}
+	Selector.prototype.setResolver = function(fn) {
+		this.resolver = fn;
 		return this;
+	}
+
+	Selector.prototype.text = function() {
+		return this.setResolver(function($) {
+			return this.context($).text().trim();
+		});
 	}
 
 	Selector.prototype.attr = function(name) {
-		this.resolver = function($) {
+		return this.setResolver(function($) {
 			return this.context($).attr(name);
-		}
-		return this;
+		});
 	}
 
 	Selector.prototype.tmpl = function(template) {
-		this.resolver = function($) {
+		return this.setResolver(function($) {
 			return $.find(this.selector).get().map(function(el) {
 				return new Resolver(cheerio(el)).tmpl(template);
 			});
-		} 
-		return this;
+		});
 	}
+
+
+	//to allow recursive templates, lazy evaluation to prevent infinite loops
+	Selector.prototype.run = function(templateFactory) {
+		return this.setResolver(function($) {
+			return $.find(this.selector).get().map(function(el) {
+				return new Resolver(cheerio(el)).tmpl(templateFactory());
+			});
+		});
+	}
+
+
 
 	module.exports = select;
 

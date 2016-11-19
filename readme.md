@@ -79,3 +79,22 @@ which results in:
             }]
         }]
     }
+
+For nested results, where the same structure is repeated withn itself, it is also possible to pass a tamplate factory function using `scrapio('td').run(...)`. This should be a function returning a factory. For example, if there are some nested comments (with replies to comments) on a page, you can create something like:
+
+    function comment() {
+        return {
+            author: scrapio('.commentAuthor').text(),
+            date: scrapio('.commentDate').text(),
+            text: scrapio('.commentText').text(),
+            childComments: scrapio('.replies').run(comment)
+        };
+    }
+
+    return scrapio.load(input).tmpl(
+        scrapio('.comments').run(comment)
+    );
+
+Note that in the main template, we could have used `scrapio('.comments').tmpl(comment())` as well, this is basically the same. However, if we were to do that in the `comment` function, we would blow up the stack as the function keeps calling itself.
+
+By passing a factory, the template is lazily evaluated when we need it, which is after the selector has resolved.
