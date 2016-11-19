@@ -1,12 +1,12 @@
 {
   "name": "scrapio",
   "version": "1.0.0",
-  "description": "",
+  "description": "npm install scrapio --save",
   "main": "index.js",
   "scripts": {
     "build": "webpack"
   },
-  "author": "",
+  "author": "rikkert@rikkertkoppes.com",
   "license": "ISC",
   "dependencies": {
     "cheerio": "^0.22.0"
@@ -15,5 +15,24 @@
     "json-loader": "^0.5.4",
     "request": "^2.79.0",
     "webpack": "^1.13.3"
-  }
+  },
+  "directories": {
+    "example": "examples"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rikkertkoppes/scrapio.git"
+  },
+  "keywords": [
+    "web",
+    "scrape",
+    "scraping",
+    "json",
+    "html",
+    "html2json"
+  ],
+  "bugs": {
+    "url": "https://github.com/rikkertkoppes/scrapio/issues"
+  },
+  "homepage": "https://github.com/rikkertkoppes/scrapio#readme"
 }
