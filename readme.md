@@ -36,9 +36,10 @@ Seleting is easy, much like JQuery and Cheerio:
 
     scrapio('td')
 
-With such a selector, you can do three things:
+With such a selector, you can do a few things things:
 
 - return the text from the nodes: `scrapio('td').text()`
+- return a number from the nodes: `scrapio('td').number()`
 - return some attribute: `scrapio('td').attr('colspan')`
 - run another template in the context of the selection: `scrapio('td').tmpl(...)`
 
@@ -98,3 +99,20 @@ For nested results, where the same structure is repeated withn itself, it is als
 Note that in the main template, we could have used `scrapio('.comments').tmpl(comment())` as well, this is basically the same. However, if we were to do that in the `comment` function, we would blow up the stack as the function keeps calling itself.
 
 By passing a factory, the template is lazily evaluated when we need it, which is after the selector has resolved.
+
+### Further manipulation
+
+A selector may return a multiple nodes. To select one or a few, we have `eq(index)` and `slice(start, end)` available as well:
+
+    scrapio('td').eq(0).text()
+    scrapio('td').slice(0,2).tmpl(...)
+
+Also, the `map(fn)` method allows you to further process the returned value:
+
+    scrapio('td').map((selection) => {
+        //do something with the cheerion selection
+    });
+
+    scrapio('td').text().map((str) => {
+        //do something with node text
+    });
